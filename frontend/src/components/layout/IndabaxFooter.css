@@ -1,0 +1,248 @@
+/* ============================================
+   INDABAX FOOTER - SEPARATE DESIGN
+   ============================================ */
+
+.indabax-footer {
+  background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+  color: #e2e8f0;
+  padding: 60px 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.indabax-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+  background-size: 60px 60px, 80px 80px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.indabax-footer . container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Footer Headings */
+.footer-heading {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight:  700;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.footer-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 2px;
+}
+
+/* Footer Text */
+.footer-text {
+  color: #cbd5e1;
+  line-height: 1.8;
+  font-size: 0.95rem;
+  margin-bottom:  20px;
+}
+
+/* Social Links */
+.indabax-footer .social-links {
+  display: flex;
+  gap: 12px;
+}
+
+.indabax-footer . social-links a {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  transition:  all 0.3s ease;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.indabax-footer .social-links a:hover {
+  background: #3b82f6;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+}
+
+/* Footer Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin:  0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+  position: relative;
+  padding-left: 0;
+}
+
+.footer-links a:: before {
+  content: '›';
+  position: absolute;
+  left: -15px;
+  opacity: 0;
+  transition:  all 0.3s ease;
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+.footer-links a:hover {
+  color:  #60a5fa;
+  padding-left: 20px;
+  text-decoration: none;
+}
+
+.footer-links a:hover::before {
+  opacity: 1;
+  left: 0;
+}
+
+/* Footer Contact */
+.footer-contact {
+  list-style: none;
+  padding: 0;
+  margin:  0;
+}
+
+.footer-contact li {
+  color: #cbd5e1;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-contact li i {
+  color: #3b82f6;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.footer-contact a {
+  color: #cbd5e1;
+  text-decoration:  none;
+  transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+/* Footer Divider */
+.footer-divider {
+  border:  none;
+  border-top:  1px solid rgba(255, 255, 255, 0.1);
+  margin: 40px 0 30px;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  margin-top: 20px;
+}
+
+.footer-bottom p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin:  0;
+}
+
+.footer-bottom a {
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 500;
+  transition:  color 0.3s ease;
+}
+
+.footer-bottom a:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+  .indabax-footer {
+    padding: 50px 0 20px;
+  }
+
+  .footer-heading {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+
+  .footer-heading::after {
+    width:  40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .indabax-footer {
+    padding: 40px 0 20px;
+  }
+
+  .indabax-footer . col-lg-4,
+  .indabax-footer .col-lg-2,
+  .indabax-footer .col-lg-3 {
+    margin-bottom: 30px;
+  }
+
+  . footer-bottom . col-md-6 {
+    text-align: center ! important;
+    margin-bottom: 10px;
+  }
+
+  .footer-bottom . row > div:last-child {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .indabax-footer {
+    padding:  30px 0 15px;
+  }
+
+  .footer-heading {
+    font-size: 1.1rem;
+  }
+
+  .footer-text,
+  .footer-links a,
+  .footer-contact li {
+    font-size: 0.9rem;
+  }
+
+  .indabax-footer .social-links a {
+    width: 36px;
+    height: 36px;
+  }
+}
