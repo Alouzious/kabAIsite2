@@ -1,17 +1,34 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './IndabaxNavbar.css';
+
 
 const IndabaxNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const isActive = (path) => {
-    return location.pathname === path ? 'active' : '';
+  // Helper to navigate to home and scroll to section
+  const goToHomeSection = (sectionId) => {
+    setIsOpen(false);
+    if (location.pathname === '/') {
+      // Already on home, just scroll
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      // Navigate to home with hash, then scroll
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 400);
+    }
   };
 
   return (
@@ -51,13 +68,13 @@ const IndabaxNavbar = () => {
             <a href="#contact" onClick={() => setIsOpen(false)}>Contact</a>
           </li>
           <li>
-            <Link to="/communities" onClick={() => setIsOpen(false)}>KabAIClub</Link>
+            <a href="#community" onClick={(e) => { e.preventDefault(); goToHomeSection('community'); }}>KabAIClub</a>
           </li>
           <li>
-            <Link to="/events" onClick={() => setIsOpen(false)}>Events</Link>
+            <a href="#event-section" onClick={(e) => { e.preventDefault(); goToHomeSection('event-section'); }}>Events</a>
           </li>
           <li>
-            <Link to="/news" onClick={() => setIsOpen(false)}>News</Link>
+            <a href="#news-section" onClick={(e) => { e.preventDefault(); goToHomeSection('news-section'); }}>News</a>
           </li>
         </ul>
       </div>

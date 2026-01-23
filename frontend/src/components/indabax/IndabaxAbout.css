@@ -7,7 +7,7 @@
 .about-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 20px;
+  padding: 40px 20px;
 }
 
 .about-content {
@@ -78,7 +78,7 @@
 /* Vision & Mission Section */
 .vision-mission-section {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  padding: 80px 20px;
+  padding: 40px 20px;
 }
 
 .vm-container {
