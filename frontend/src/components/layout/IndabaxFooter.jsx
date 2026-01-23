@@ -3,11 +3,12 @@ import axios from 'axios';
 import './IndabaxFooter.css';
 
 const IndabaxFooter = () => {
+  console.log('IndabaxFooter loaded');
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/api/indabax/api/settings/current/')
+    axios.get('/api/indabax/settings/current/')
       .then(res => {
         setSettings(res.data);
         setLoading(false);
@@ -19,21 +20,28 @@ const IndabaxFooter = () => {
 
   if (loading) return null;
 
+  // Debug: log settings to check logo_url
+  console.log('IndabaxFooter settings:', settings);
+
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About Us', path: '#about' },
-    { name: 'Events', path: '/events' },
+    { name: 'Home', path: '#hero' },
+    { name: 'About', path: '#about' },
+    { name: 'Leaders', path: '#leaders' },
     { name: 'Gallery', path: '#gallery' },
-    { name: 'Leaders', path: '/leaders' },
+    { name: 'Resources', path: '#resources' },
+    { name: 'KabAIClub', path: '/communities' },
+    { name: 'Events', path: '/events' },
+    { name: 'News', path: '/news' },
   ];
 
   const resources = [
-    { name: 'Learning Resources', path: '/resources' },
-    { name: 'Speakers', path: '/speakers' },
-    { name: 'Sessions', path: '/sessions' },
+    { name: 'Learning Resources', path: '#resources' },
     { name: 'Contact Us', path: '#contact' },
+    { name: 'KabAIClub', path: '/communities' },
+    { name: 'Events', path: '/events' },
+    { name: 'News', path: '/news' },
   ];
 
   return (
@@ -42,9 +50,9 @@ const IndabaxFooter = () => {
         <div className="footer-container">
           {/* Brand Section */}
           <div className="footer-section footer-brand">
-            {settings?.logo_url || settings?.logo ? (
+            {settings?.logo_url ? (
               <img
-                src={settings.logo_url || settings.logo}
+                src={settings.logo_url}
                 alt={settings?.site_name || 'Indabax Kabale'}
                 className="footer-logo"
               />
@@ -104,7 +112,11 @@ const IndabaxFooter = () => {
             <ul className="footer-links">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.path}>{link.name}</a>
+                  {link.path.startsWith('#') ? (
+                    <a href={link.path}>{link.name}</a>
+                  ) : (
+                    <a href={link.path} target="_blank" rel="noopener noreferrer">{link.name}</a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -116,7 +128,11 @@ const IndabaxFooter = () => {
             <ul className="footer-links">
               {resources.map((link, index) => (
                 <li key={index}>
-                  <a href={link.path}>{link.name}</a>
+                  {link.path.startsWith('#') ? (
+                    <a href={link.path}>{link.name}</a>
+                  ) : (
+                    <a href={link.path} target="_blank" rel="noopener noreferrer">{link.name}</a>
+                  )}
                 </li>
               ))}
             </ul>

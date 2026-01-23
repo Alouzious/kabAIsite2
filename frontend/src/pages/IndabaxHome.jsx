@@ -12,17 +12,17 @@ import IndabaxAboutSection from '../components/indabax/IndabaxAboutSection';
 import '../components/indabax/IndabaxHero.css';
 import '../components/indabax/LeadersSection.css';
 
+
 const IndabaxHome = () => (
-	<div>
-		<IndabaxNavbar />
-		<HeroSection />
-		<IndabaxAboutSection />
-		<LeadersSection />
-		<IndabaxGallerySection />
-		<LearningResourcesSection />
-		
-		<IndabaxFooter />
-	</div>
+  <div>
+    <IndabaxNavbar />
+    <div id="hero"><HeroSection /></div>
+    <div id="about"><IndabaxAboutSection /></div>
+    <div id="leaders"><LeadersSection /></div>
+    <div id="gallery"><IndabaxGallerySection /></div>
+    <div id="resources"><LearningResourcesSection /></div>
+    <IndabaxFooter />
+  </div>
 );
 
 export default IndabaxHome;

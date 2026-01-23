@@ -93,9 +93,9 @@ const HeroSection = () => {
       {/* Logo in top right corner */}
       <div className="hero-logo-container">
         <div className="hero-logo-circle">
-          {settings?.logo_url || settings?.logo ? (
+          {settings?.logo_url ? (
             <img
-              src={settings.logo_url || settings.logo}
+              src={settings.logo_url}
               alt={settings?.site_name || "IndabaX Kabale"}
               className="hero-logo-img"
             />

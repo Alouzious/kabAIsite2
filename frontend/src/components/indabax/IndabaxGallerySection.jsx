@@ -9,7 +9,7 @@ const IndabaxGallerySection = () => {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    axios.get('/api/indabax/api/gallery/')
+    axios.get('/api/indabax/gallery/')
       .then(res => {
         setImages(res.data.results); // FIX: Access results array
         setLoading(false);

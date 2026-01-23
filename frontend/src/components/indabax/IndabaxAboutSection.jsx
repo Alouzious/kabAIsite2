@@ -8,7 +8,7 @@ const IndabaxAboutSection = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/indabax/api/settings/current/')
+    axios.get('/api/indabax/settings/current/')
       .then(res => {
         setSettings(res.data);
         setLoading(false);

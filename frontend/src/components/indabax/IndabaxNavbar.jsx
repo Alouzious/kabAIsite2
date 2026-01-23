@@ -32,32 +32,32 @@ const IndabaxNavbar = () => {
 
         {/* Navigation Links */}
         <ul className={`navbar-menu ${isOpen ? 'active' : ''}`}>
-          <li className={isActive('/indabax')}>
-            <Link to="/indabax" onClick={() => setIsOpen(false)}>Home</Link>
+          <li>
+            <a href="#hero" onClick={() => setIsOpen(false)}>Home</a>
           </li>
-          <li className={isActive('/indabax/about')}>
-            <Link to="/indabax/about" onClick={() => setIsOpen(false)}>About Us</Link>
+          <li>
+            <a href="#about" onClick={() => setIsOpen(false)}>About</a>
           </li>
-          <li className={isActive('/indabax/leaders')}>
-            <Link to="/indabax/leaders" onClick={() => setIsOpen(false)}>Leaders</Link>
+          <li>
+            <a href="#leaders" onClick={() => setIsOpen(false)}>Leaders</a>
           </li>
-          <li className={isActive('/indabax/events')}>
-            <Link to="/indabax/events" onClick={() => setIsOpen(false)}>Events</Link>
+          <li>
+            <a href="#gallery" onClick={() => setIsOpen(false)}>Gallery</a>
           </li>
-          <li className={isActive('/indabax/news')}>
-            <Link to="/indabax/news" onClick={() => setIsOpen(false)}>News</Link>
+          <li>
+            <a href="#resources" onClick={() => setIsOpen(false)}>Resources</a>
           </li>
-          <li className={isActive('/indabax/research')}>
-            <Link to="/indabax/research" onClick={() => setIsOpen(false)}>Research</Link>
+          <li>
+            <a href="#contact" onClick={() => setIsOpen(false)}>Contact</a>
           </li>
-          <li className={isActive('/indabax/resources')}>
-            <Link to="/indabax/resources" onClick={() => setIsOpen(false)}>Resources</Link>
+          <li>
+            <Link to="/communities" onClick={() => setIsOpen(false)}>KabAIClub</Link>
           </li>
-          <li className={isActive('/indabax/gallery')}>
-            <Link to="/indabax/gallery" onClick={() => setIsOpen(false)}>Gallery</Link>
+          <li>
+            <Link to="/events" onClick={() => setIsOpen(false)}>Events</Link>
           </li>
-          <li className={isActive('/indabax/KabAIClub')}>
-            <Link to="/indabax/communities" onClick={() => setIsOpen(false)}>KabAIClub</Link>
+          <li>
+            <Link to="/news" onClick={() => setIsOpen(false)}>News</Link>
           </li>
         </ul>
       </div>
