@@ -1,34 +1,29 @@
 from django.contrib import admin
-from .models import TeamRole, TeamMember
-
-@admin.register(TeamRole)
-class TeamRoleAdmin(admin.ModelAdmin):
-    list_display = ['name', 'order', 'is_active', 'created_at']
-    list_filter = ['is_active']
-    search_fields = ['name', 'description']
-    list_editable = ['order', 'is_active']
+from .models import TeamMember
 
 @admin.register(TeamMember)
 class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ['name', 'role', 'title', 'order', 'is_executive', 'is_active', 'joined_date']
-    list_filter = ['is_active', 'is_executive', 'role', 'joined_date']
-    search_fields = ['name', 'title', 'bio', 'email']
-    list_editable = ['order', 'is_executive', 'is_active']
-    date_hierarchy = 'joined_date'
-    
+    list_display = ['name', 'display_title', 'start_year', 'end_year', 'is_current', 'is_executive', 'is_active']
+    list_filter = ['is_executive', 'is_active', 'start_year', 'end_year']
+    search_fields = ['name', 'title', 'bio', 'email', 'linkedin_url', 'twitter_url', 'github_url']
+    list_editable = ['is_executive', 'is_active']
+    ordering = ['-start_year', '-end_year', 'order', 'name']  # <-- Fix: only use real fields, not 'is_current'
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'role', 'title', 'bio', 'photo')
+            'fields': ('name', 'title', 'bio', 'photo')
         }),
-        ('Contact Information', {
-            'fields':  ('email', 'phone'),
+        ('Contact & Social', {
+            'fields': ('email', 'phone', 'linkedin_url', 'twitter_url', 'github_url', 'website_url'),
             'classes': ('collapse',)
         }),
-        ('Social Media', {
-            'fields':  ('linkedin_url', 'twitter_url', 'github_url', 'website_url'),
-            'classes': ('collapse',)
+        ('Leadership Years', {
+            'fields': ('start_year', 'end_year', 'joined_date'),
         }),
         ('Display Settings', {
-            'fields': ('order', 'is_active', 'is_executive', 'joined_date')
+            'fields': ('is_executive', 'is_active', 'order')
         }),
     )
+
+    def is_current(self, obj):
+        return obj.is_current
+    is_current.boolean = True

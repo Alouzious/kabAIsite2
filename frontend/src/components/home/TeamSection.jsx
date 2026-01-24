@@ -1,113 +1,108 @@
 import React, { useState, useEffect } from 'react';
 import './TeamSection.css';
 
-const TeamSection = ({ initialLeaders = [], categories = [] }) => {
-  const [leaders, setLeaders] = useState(initialLeaders);
-  const [activeCategory, setActiveCategory] = useState(null);
+const TeamSection = () => {
+  const [currentLeaders, setCurrentLeaders] = useState([]);
+  const [archivedLeaders, setArchivedLeaders] = useState([]);
+  const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState(null);
 
-  // Fetch leaders from API when component mounts
+  // Fetch leaders from API
   useEffect(() => {
-    if (initialLeaders.length === 0) {
-      fetchLeaders();
-    }
-  }, []);
-
-  const fetchLeaders = async () => {
     setLoading(true);
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/leaders/current/`);
-      const data = await response.json();
-      setLeaders(data);
-    } catch (error) {
-      console.error('Error fetching leaders:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Toggle social links for a specific leader card
-  const toggleSocial = (leaderId) => {
-    setActiveCategory(activeCategory === leaderId ?  null : leaderId);
-  };
-
-  // Close social links when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (! event.target.closest('.leader-social-toggle') && 
-          !event. target.closest('.leader-social-links')) {
-        setActiveCategory(null);
-      }
-    };
-
-    document. addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    Promise.all([
+      fetch('/api/team/members/current/').then(res => res.json()),
+      fetch('/api/team/members/archived/').then(res => res.json())
+    ])
+      .then(([current, archived]) => {
+        setCurrentLeaders(current || []);
+        setArchivedLeaders(archived || []);
+      })
+      .catch((error) => {
+        console.error("Error fetching team members", error);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  // Group leaders by category
-  const groupedLeaders = categories.map(category => ({
-    ... category,
-    leaders: leaders. filter(leader => leader.category === category.key)
-  })).filter(group => group.leaders.length > 0);
-
+  // Leader Card component
   const LeaderCard = ({ leader }) => (
-    <div className="leader-card">
-      {/* Social Toggle Button */}
-      <div 
-        className={`leader-social-toggle ${activeCategory === leader.id ? 'active' : ''}`}
-        onClick={() => toggleSocial(leader. id)}
-      >
-        <i className={`fas ${activeCategory === leader.id ? 'fa-times' : 'fa-plus'}`}></i>
+    <div 
+      className="leader-card"
+      onMouseEnter={() => setHoveredCard(leader.id)}
+      onMouseLeave={() => setHoveredCard(null)}
+    >
+      {/* Profile Image */}
+      <div className="leader-photo-wrapper">
+        <div className="leader-photo">
+          {leader.photo_thumbnail_url ? (
+            <img src={leader.photo_thumbnail_url} alt={leader.name} loading="lazy" />
+          ) : (
+            <div className="leader-placeholder-photo">
+              {leader.name.charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+        
+        {/* Social Media Icons - Show on Hover */}
+        <div className={`leader-social-overlay ${hoveredCard === leader.id ? 'show' : ''}`}>
+          <div className="social-icons-grid">
+            {leader.email && (
+              <a href={`mailto:${leader.email}`} className="social-icon email" title="Email">
+                <i className="fas fa-envelope"></i>
+              </a>
+            )}
+            {leader.linkedin_url && (
+              <a href={leader.linkedin_url} className="social-icon linkedin" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            )}
+            {leader.twitter_url && (
+              <a href={leader.twitter_url} className="social-icon twitter" target="_blank" rel="noopener noreferrer" title="X (Twitter)">
+                <i className="fab fa-x-twitter"></i>
+              </a>
+            )}
+            {leader.github_url && (
+              <a href={leader.github_url} className="social-icon github" target="_blank" rel="noopener noreferrer" title="GitHub">
+                <i className="fab fa-github"></i>
+              </a>
+            )}
+            {leader.website_url && (
+              <a href={leader.website_url} className="social-icon website" target="_blank" rel="noopener noreferrer" title="Website">
+                <i className="fas fa-globe"></i>
+              </a>
+            )}
+            {leader.phone && (
+              <a href={`tel:${leader.phone}`} className="social-icon phone" title="Phone">
+                <i className="fas fa-phone-alt"></i>
+              </a>
+            )}
+          </div>
+        </div>
       </div>
-
-      {/* Social Links Dropdown */}
-      <div className={`leader-social-links ${activeCategory === leader.id ? 'active' : ''}`}>
-        {leader.email && (
-          <a href={`mailto:${leader.email}`} className="leader-social-link email">
-            <i className="fas fa-envelope"></i>
-          </a>
-        )}
-        {leader.linkedin_url && (
-          <a href={leader.linkedin_url} className="leader-social-link linkedin" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-linkedin-in"></i>
-          </a>
-        )}
-        {leader.github_url && (
-          <a href={leader.github_url} className="leader-social-link github" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-github"></i>
-          </a>
-        )}
-        {leader.personal_website && (
-          <a href={leader.personal_website} className="leader-social-link website" target="_blank" rel="noopener noreferrer">
-            <i className="fas fa-globe"></i>
-          </a>
-        )}
-        {leader.phone && (
-          <a href={`tel:${leader.phone}`} className="leader-social-link phone">
-            <i className="fas fa-phone"></i>
-          </a>
-        )}
-      </div>
-
-      {/* Leader Photo */}
-      <div className="leader-photo">
-        {leader.photo ? (
-          <img src={leader.photo} alt={leader.full_name} loading="lazy" />
-        ) : (
-          <div className="leader-placeholder-photo">
-            {leader.full_name. charAt(0).toUpperCase()}
+      
+      {/* Leader Information */}
+      <div className="leader-info">
+        <h4 className="leader-name">{leader.name}</h4>
+        <p className="leader-position">{leader.display_title}</p>
+        
+        {leader.start_year && (
+          <div className="leader-tenure">
+            <i className="fas fa-calendar-alt"></i>
+            <span>
+              {leader.is_current
+                ? `${leader.start_year} - Present`
+                : `${leader.start_year} - ${leader.end_year}`}
+            </span>
           </div>
         )}
+        
+        {leader.bio && (
+          <p className="leader-bio">
+            {leader.bio.length > 120 ? `${leader.bio.substring(0, 120)}...` : leader.bio}
+          </p>
+        )}
       </div>
-
-      {/* Leader Info */}
-      <h4 className="leader-name">{leader.full_name}</h4>
-      <p className="leader-position">{leader.position}</p>
-      <p className="leader-bio">
-        {leader.bio && leader.bio.length > 120 
-          ? `${leader.bio.substring(0, 120)}...` 
-          : leader.bio}
-      </p>
     </div>
   );
 
@@ -126,44 +121,55 @@ const TeamSection = ({ initialLeaders = [], categories = [] }) => {
     <section id="leaders-section" className="leaders-section">
       {/* Section Header */}
       <div className="leaders-section-header">
-        <div className="leaders-section-subtitle">TEAM MEMBERS</div>
+        {/* <div className="leaders-section-subtitle">TEAM MEMBERS</div> */}
         <h2 className="leaders-section-title">
           Meet our<br />
           Professional team of<br />
           experts
         </h2>
-        <p className="leaders-section-description">
-          Our dedicated team of leaders and experts are committed to driving innovation and excellence in everything we do. 
-        </p>
+        {/* <p className="leaders-section-description">
+          Our dedicated team of leaders and experts are committed to driving innovation and excellence in everything we do.
+        </p> */}
       </div>
 
-      {/* Categories */}
-      {groupedLeaders.length > 0 ?  (
-        groupedLeaders.map((group) => (
-          <div key={group.key} id={`category-${group.key}`} className="leaders-category-section">
-            <h3 className="leaders-category-title">{group. label}</h3>
-            
-            {/* Leaders Grid */}
-            <div className="leaders-grid">
-              {group.leaders. map((leader) => (
-                <LeaderCard key={leader.id} leader={leader} />
-              ))}
-            </div>
-
-            {/* View Previous Leaders Button */}
-            <div className="leaders-view-previous">
-              <a 
-                href={`/previous-leaders/${group.key}`} 
-                className="leaders-view-previous-btn"
-              >
-                View Previous {group.label}
-              </a>
-            </div>
+      {/* Current Team */}
+      <div className="leaders-category-section">
+        <h3 className="leaders-category-title">Current Team</h3>
+        {currentLeaders.length > 0 ? (
+          <div className="leaders-grid">
+            {currentLeaders.map((leader) => (
+              <LeaderCard key={leader.id} leader={leader} />
+            ))}
           </div>
-        ))
-      ) : (
-        <div className="leaders-no-data">
-          <p>No team members to display at the moment.</p>
+        ) : (
+          <div className="leaders-no-data">
+            <p>No current team members to display.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Show/hide archived team button */}
+      {archivedLeaders.length > 0 && (
+        <div className="leaders-view-previous">
+          <button
+            className="leaders-view-previous-btn"
+            onClick={() => setShowArchived(!showArchived)}
+          >
+            <i className={`fas fa-${showArchived ? 'chevron-up' : 'chevron-down'}`}></i>
+            {showArchived ? 'Hide Previous Leaders' : 'Show Previous Leaders'}
+          </button>
+        </div>
+      )}
+
+      {/* Archived Team */}
+      {showArchived && (
+        <div className="leaders-category-section archived-section">
+          <h3 className="leaders-category-title">Previous Leaders</h3>
+          <div className="leaders-grid">
+            {archivedLeaders.map((leader) => (
+              <LeaderCard key={leader.id} leader={leader} />
+            ))}
+          </div>
         </div>
       )}
     </section>
