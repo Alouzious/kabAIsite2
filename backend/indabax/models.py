@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from imagekit.models import ProcessedImageField, ImageSpecField
+from django.utils import timezone
+
+
 
 class LearningResource(models.Model):
     RESOURCE_TYPES = [
@@ -77,8 +80,8 @@ class Leader(models.Model):
     )
     bio = models.TextField(blank=True)
     course = models.CharField(max_length=100, blank=True)
-    year = models.PositiveIntegerField()
-    is_current = models.BooleanField(default=False, help_text="Mark as current leader.")
+    start_year = models.PositiveIntegerField(default=timezone.now().year, help_text="Leadership start year")
+    end_year = models.PositiveIntegerField(blank=True, null=True, help_text="Leadership end year; blank = current")
     linkedin = models.URLField(blank=True)
     twitter = models.URLField(blank=True)
     github = models.URLField(blank=True)
@@ -89,11 +92,20 @@ class Leader(models.Model):
     class Meta:
         verbose_name = "Leader"
         verbose_name_plural = "Leaders"
-        ordering = ['-is_current', '-year', 'name']
+        ordering = ['-start_year', '-end_year', 'name']
 
     def __str__(self):
-        return f"{self.name} ({self.year})"
+        return f"{self.name} ({self.role})"
 
+    @property
+    def is_current(self):
+        year = timezone.now().year
+        return (self.end_year is None) or (self.end_year >= year)
+
+    @property
+    def is_archived(self):
+        year = timezone.now().year
+        return (self.end_year is not None and self.end_year < year)
 from django.utils.text import slugify
 
 class IndabaxSettings(models.Model):

@@ -1,4 +1,3 @@
-# LearningResource serializer
 from rest_framework import serializers
 from .models import (
     LearningResource,
@@ -8,7 +7,7 @@ from .models import (
     IndabaxSession,
     IndabaxGallery,
     HeroSection,
-    Leader
+    Leader,
 )
 
 class HeroSectionSerializer(serializers.ModelSerializer):
@@ -47,15 +46,20 @@ class LearningResourceSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.image.url) if request else obj.image.url
         return None
 
-# Leader serializer
+
 class LeaderSerializer(serializers.ModelSerializer):
     profile_image_url = serializers.SerializerMethodField()
+    is_current = serializers.SerializerMethodField()
+    is_archived = serializers.SerializerMethodField()
 
     class Meta:
         model = Leader
         fields = [
-            'id', 'name', 'role', 'profile_image_url', 'bio', 'course', 'year', 'is_current',
-            'linkedin', 'twitter', 'github', 'email', 'created_at', 'updated_at'
+            'id', 'name', 'role', 'profile_image_url', 'bio',
+            'course', 'start_year', 'end_year',
+            'is_current', 'is_archived',
+            'linkedin', 'twitter', 'github', 'email',
+            'created_at', 'updated_at',
         ]
 
     def get_profile_image_url(self, obj):
@@ -63,6 +67,13 @@ class LeaderSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             return request.build_absolute_uri(obj.profile_image.url) if request else obj.profile_image.url
         return None
+
+    def get_is_current(self, obj):
+        return obj.is_current
+
+    def get_is_archived(self, obj):
+        return obj.is_archived
+
 
 class IndabaxSettingsSerializer(serializers.ModelSerializer):
     logo_url = serializers.SerializerMethodField()
@@ -102,7 +113,7 @@ class IndabaxEventSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.image:
-            request = self. context.get('request')
+            request = self.context.get('request')
             return request.build_absolute_uri(obj.image.url) if request else obj.image.url
         return None
     
@@ -123,7 +134,7 @@ class IndabaxSpeakerSerializer(serializers.ModelSerializer):
     def get_photo_url(self, obj):
         if obj.photo:
             request = self.context.get('request')
-            return request.build_absolute_uri(obj.photo.url) if request else obj.photo. url
+            return request.build_absolute_uri(obj.photo.url) if request else obj.photo.url
         return None
 
 class IndabaxSessionSerializer(serializers.ModelSerializer):
@@ -136,9 +147,9 @@ class IndabaxSessionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class IndabaxGallerySerializer(serializers.ModelSerializer):
-    event_title = serializers.CharField(source='event. title', read_only=True)
+    event_title = serializers.CharField(source='event.title', read_only=True)
     image_url = serializers.SerializerMethodField()
-    image_thumbnail_url = serializers. SerializerMethodField()
+    image_thumbnail_url = serializers.SerializerMethodField()
     
     class Meta:
         model = IndabaxGallery
@@ -147,11 +158,11 @@ class IndabaxGallerySerializer(serializers.ModelSerializer):
     def get_image_url(self, obj):
         if obj.image:
             request = self.context.get('request')
-            return request.build_absolute_uri(obj.image. url) if request else obj.image.url
+            return request.build_absolute_uri(obj.image.url) if request else obj.image.url
         return None
     
     def get_image_thumbnail_url(self, obj):
         if obj.image_thumbnail:
-            request = self.context. get('request')
-            return request.build_absolute_uri(obj.image_thumbnail.url) if request else obj.image_thumbnail. url
+            request = self.context.get('request')
+            return request.build_absolute_uri(obj.image_thumbnail.url) if request else obj.image_thumbnail.url
         return None

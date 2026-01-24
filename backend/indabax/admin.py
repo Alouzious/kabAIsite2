@@ -49,17 +49,23 @@ class HeroSectionAdmin(admin.ModelAdmin):
         return "No image"
     hero_image_preview.short_description = "Image Preview"
 
-# Leader admin
+from django.contrib import admin
+from django.utils.html import format_html
+from .models import Leader
+
 @admin.register(Leader)
 class LeaderAdmin(admin.ModelAdmin):
-    list_display = ['name', 'role', 'year', 'is_current', 'leader_image_preview']
-    list_filter = ['year', 'is_current']
+    list_display = ['name', 'role', 'start_year', 'end_year', 'is_current_display', 'leader_image_preview']
+    list_filter = ['start_year', 'end_year']
     search_fields = ['name', 'role', 'bio', 'course']
-    list_editable = ['is_current']
     readonly_fields = ['leader_image_preview']
     fieldsets = (
         (None, {
-            'fields': ('name', 'role', 'profile_image', 'leader_image_preview', 'bio', 'course', 'year', 'is_current', 'linkedin', 'twitter', 'github', 'email')
+            'fields': (
+                'name', 'role', 'profile_image', 'leader_image_preview', 'bio', 'course',
+                'start_year', 'end_year',
+                'linkedin', 'twitter', 'github', 'email'
+            )
         }),
     )
 
@@ -69,6 +75,11 @@ class LeaderAdmin(admin.ModelAdmin):
         return "No image"
     leader_image_preview.short_description = "Profile Preview"
 
+    def is_current_display(self, obj):
+        return obj.is_current
+    is_current_display.short_description = 'Is Current?'
+    is_current_display.boolean = True
+    
 @admin.register(IndabaxSettings)
 class IndabaxSettingsAdmin(admin.ModelAdmin):
     list_display = ['site_name', 'contact_email', 'updated_at']
