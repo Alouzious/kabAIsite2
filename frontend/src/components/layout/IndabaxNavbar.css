@@ -26,7 +26,7 @@
 }
 
 .indabax-top-bar .social-links a:hover {
-  background:  rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
@@ -61,26 +61,26 @@
   font-size: 1.5rem;
 }
 
-.indabax-navbar . brand-text {
+.indabax-navbar .brand-text {
   background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-  -webkit-background-clip:  text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.indabax-navbar . nav-link {
+.indabax-navbar .nav-link {
   color: #475569;
-  font-weight:  500;
+  font-weight: 500;
   padding: 8px 16px;
   transition: all 0.3s ease;
   position: relative;
 }
 
-.indabax-navbar .nav-link:: after {
+.indabax-navbar .nav-link::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left:  50%;
+  left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 2px;
@@ -92,16 +92,16 @@
   color: #1e3a8a;
 }
 
-.indabax-navbar . nav-link:hover::after {
+.indabax-navbar .nav-link:hover::after {
   width: 80%;
 }
 
-. indabax-navbar .btn-primary {
+.indabax-navbar .btn-primary {
   background: linear-gradient(135deg, #1e3a8a, #3b82f6);
   border: none;
   padding: 10px 25px;
   border-radius: 25px;
-  font-weight:  600;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
@@ -111,29 +111,29 @@
 }
 
 /* Mobile Menu */
-.indabax-navbar . navbar-toggler {
+.indabax-navbar .navbar-toggler {
   border-color: #1e3a8a;
 }
 
-.indabax-navbar . navbar-toggler-icon {
+.indabax-navbar .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%231e3a8a' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 /* Responsive */
-@media (max-width:  991px) {
+@media (max-width: 991px) {
   .indabax-navbar .navbar-collapse {
     background: white;
     padding: 20px;
     margin-top: 15px;
     border-radius: 10px;
-    box-shadow:  0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
 
-  .indabax-navbar . nav-item {
+  .indabax-navbar .nav-item {
     margin: 5px 0;
   }
 
-  .indabax-navbar . btn-primary {
+  .indabax-navbar .btn-primary {
     width: 100%;
     margin-top: 10px;
   }
@@ -145,7 +145,7 @@
     justify-content: center !important;
   }
 
-  .indabax-top-bar .row > div: last-child {
+  .indabax-top-bar .row > div:last-child {
     margin-top: 10px;
   }
 }

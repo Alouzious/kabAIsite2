@@ -1,0 +1,11 @@
+
+> kuai-frontend@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Failed to compile.
+
+static/css/main.1e3b903a.css from Css Minimizer plugin
+Error: Expected a pseudo-class or pseudo-element.
+
+

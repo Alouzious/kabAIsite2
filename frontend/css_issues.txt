@@ -1,0 +1,11 @@
+=== CSS SYNTAX ISSUES REPORT ===
+
+1. Double spaces after colons:
+
+2. Space before class selectors:
+
+3. Properties without values (ending with colon):
+src/components/layout/Footer.css:20:  background-image: 
+
+4. Invalid pseudo-element syntax:
+
