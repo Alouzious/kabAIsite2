@@ -1,61 +1,10 @@
-import os
-from pathlib import Path
-from dotenv import load_dotenv
+# Add after your imports
+import dj_database_url
 
-# ==============================
-# LOAD ENV VARIABLES
-# ==============================
-load_dotenv()  # Loads .env from BASE_DIR
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# ==============================
-# SECURITY
-# ==============================
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "django-insecure-change-this-before-production"
-)
-
-DEBUG = os.getenv("DEBUG", "False") == "True"
-
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "kabailab.com,www.kabailab.com").split(",")
-
-# ==============================
-# APPLICATIONS
-# ==============================
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    # Third-party apps
-    'rest_framework',
-    'corsheaders',
-    'imagekit',
-    'django_filters',
-
-    # Local apps
-    'core',
-    'about',
-    'news',
-    'events',
-    'projects',
-    'team',
-    'gallery',
-    'partners',
-    'contact',
-    'indabax',
-]
-
-# ==============================
-# MIDDLEWARE
-# ==============================
+# Update MIDDLEWARE - add WhiteNoise for static files
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ADD THIS LINE
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,32 +14,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ==============================
-# URLS & TEMPLATES
-# ==============================
-ROOT_URLCONF = 'kuai_project.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = 'kuai_project.wsgi.application'
-
-# ==============================
-# DATABASE
-# ==============================
+# Update DATABASE section - replace your current DATABASES with this:
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -102,60 +26,249 @@ DATABASES = {
     }
 }
 
-# ==============================
-# PASSWORD VALIDATION
-# ==============================
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
-]
+# Support DATABASE_URL for production (Render, Railway, etc.)
+if os.getenv('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 
-# ==============================
-# INTERNATIONALIZATION
-# ==============================
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Africa/Kampala'
-USE_I18N = True
-USE_TZ = True
-
-# ==============================
-# STATIC & MEDIA FILES
-# ==============================
+# Update STATIC FILES section - replace your current one:
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'frontend_build' / 'static',  # React static files
 ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# WhiteNoise configuration for serving static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ==============================
-# DEFAULT PRIMARY KEY
-# ==============================
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Update CORS to use environment variable
+CORS_ALLOWED_ORIGINS = os.getenv(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:3000,http://127.0.0.1:3000'
+).split(',')
 
-# ==============================
-# CORS SETTINGS
-# ==============================
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://kabailab.com",
-    "https://www.kabailab.com",
-]
-CORS_ALLOW_CREDENTIALS = True
+# Add security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
 
-# ==============================
-# REST FRAMEWORK
-# ==============================
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# import os
+# from pathlib import Path
+# from dotenv import load_dotenv
+
+# # ==============================
+# # LOAD ENV VARIABLES
+# # ==============================
+# load_dotenv()  # Loads .env from BASE_DIR
+
+# BASE_DIR = Path(__file__).resolve().parent.parent
+
+# # ==============================
+# # SECURITY
+# # ==============================
+# SECRET_KEY = os.getenv(
+#     "SECRET_KEY",
+#     "django-insecure-change-this-before-production"
+# )
+
+# DEBUG = os.getenv("DEBUG", "False") == "True"
+
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "kabailab.com,www.kabailab.com").split(",")
+
+# # ==============================
+# # APPLICATIONS
+# # ==============================
+# INSTALLED_APPS = [
+#     'django.contrib.admin',
+#     'django.contrib.auth',
+#     'django.contrib.contenttypes',
+#     'django.contrib.sessions',
+#     'django.contrib.messages',
+#     'django.contrib.staticfiles',
+
+#     # Third-party apps
+#     'rest_framework',
+#     'corsheaders',
+#     'imagekit',
+#     'django_filters',
+
+#     # Local apps
+#     'core',
+#     'about',
+#     'news',
+#     'events',
+#     'projects',
+#     'team',
+#     'gallery',
+#     'partners',
+#     'contact',
+#     'indabax',
+# ]
+
+# # ==============================
+# # MIDDLEWARE
+# # ==============================
+# MIDDLEWARE = [
+#     'django.middleware.security.SecurityMiddleware',
+#     'corsheaders.middleware.CorsMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+# ]
+
+# # ==============================
+# # URLS & TEMPLATES
+# # ==============================
+# ROOT_URLCONF = 'kuai_project.urls'
+
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [BASE_DIR / 'templates'],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
+
+# WSGI_APPLICATION = 'kuai_project.wsgi.application'
+
+# # ==============================
+# # DATABASE
+# # ==============================
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
+#         'NAME': os.getenv('DB_NAME', BASE_DIR / 'db.sqlite3'),
+#         'USER': os.getenv('DB_USER', ''),
+#         'PASSWORD': os.getenv('DB_PASSWORD', ''),
+#         'HOST': os.getenv('DB_HOST', 'localhost'),
+#         'PORT': os.getenv('DB_PORT', ''),
+#     }
+# }
+
+# # ==============================
+# # PASSWORD VALIDATION
+# # ==============================
+# AUTH_PASSWORD_VALIDATORS = [
+#     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+#     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+#     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+#     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+# ]
+
+# # ==============================
+# # INTERNATIONALIZATION
+# # ==============================
+# LANGUAGE_CODE = 'en-us'
+# TIME_ZONE = 'Africa/Kampala'
+# USE_I18N = True
+# USE_TZ = True
+
+# # ==============================
+# # STATIC & MEDIA FILES
+# # ==============================
+# STATIC_URL = '/static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+#     BASE_DIR / 'frontend_build' / 'static',  # React static files
+# ]
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
+
+# # ==============================
+# # DEFAULT PRIMARY KEY
+# # ==============================
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# # ==============================
+# # CORS SETTINGS
+# # ==============================
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "https://kabailab.com",
+#     "https://www.kabailab.com",
+# ]
+# CORS_ALLOW_CREDENTIALS = True
+
+# # ==============================
+# # REST FRAMEWORK
+# # ==============================
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.AllowAny',
+#     ],
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 10,
+# }
