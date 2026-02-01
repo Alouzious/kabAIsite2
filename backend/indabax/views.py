@@ -56,8 +56,10 @@ def indabax_leaders(request):
     return render(request, 'indabax/leaders.html', context)
 
 # API views for hero and leaders
+# API views for hero and leaders
+# OPTION 2: Show all slides regardless of is_active status
 class HeroSectionListView(generics.ListAPIView):
-    queryset = HeroSection.objects.all()
+    queryset = HeroSection.objects.all().order_by('-created_at')  # All slides, newest first
     serializer_class = HeroSectionSerializer
 
 # ----- ARCHIVE-COMPATIBLE LEADER API -----

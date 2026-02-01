@@ -18,13 +18,17 @@ const HeroSection = () => {
         // Fetch hero slides
         const heroRes = await axios.get(`${config.API_BASE_URL}/indabax/hero/`);
         const heroData = heroRes.data.results || heroRes.data || [];
-        // Ensure heroData is array before filtering
-        const slides = Array.isArray(heroData) ? heroData.filter(h => h.is_active || true) : [];
+        // Since using Option 2 view, all slides are returned - just ensure it's an array
+        const slides = Array.isArray(heroData) ? heroData : [];
         setHeroSlides(slides);
 
         // Fetch settings for logo
-        const settingsRes = await axios.get(`${config.API_BASE_URL}/indabax/settings/current/`);
-        setSettings(settingsRes.data);
+        try {
+          const settingsRes = await axios.get(`${config.API_BASE_URL}/indabax/settings/current/`);
+          setSettings(settingsRes.data);
+        } catch (settingsErr) {
+          console.warn('Settings not available:', settingsErr);
+        }
       } catch (err) {
         console.error('Error loading data:', err);
         setHeroSlides([]);
@@ -35,21 +39,6 @@ const HeroSection = () => {
 
     fetchData();
   }, []);
-
-  // Auto-play carousel
-  useEffect(() => {
-    if (heroSlides.length > 1) {
-      intervalRef.current = setInterval(() => {
-        nextSlide();
-      }, 5000);
-
-      return () => {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-        }
-      };
-    }
-  }, [currentSlide, heroSlides.length]);
 
   const nextSlide = () => {
     if (!isAnimating && heroSlides.length > 0) {
@@ -74,6 +63,21 @@ const HeroSection = () => {
       setTimeout(() => setIsAnimating(false), 800);
     }
   };
+
+  // Auto-play carousel
+  useEffect(() => {
+    if (heroSlides.length > 1) {
+      intervalRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      }, 5000);
+
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
+    }
+  }, [heroSlides.length]);
 
   if (loading) {
     return (
