@@ -170,10 +170,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ==============================
 # CORS SETTINGS
 # ==============================
-CORS_ALLOWED_ORIGINS = os.getenv(
+# Get CORS origins from env and split by comma, then strip whitespace
+cors_origins_raw = os.getenv(
     'CORS_ALLOWED_ORIGINS',
     'http://localhost:3000,http://127.0.0.1:3000'
-).split(',')
+)
+
+# Split and clean up origins
+CORS_ALLOWED_ORIGINS = [
+    origin.strip() for origin in cors_origins_raw.split(',') if origin.strip()
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
