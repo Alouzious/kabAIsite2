@@ -101,6 +101,16 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD', ''),
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', ''),
+        
+        # ADDED: Connection pooling settings for Supabase
+        'CONN_MAX_AGE': 300,  # Reuse connections for 5 minutes (300 seconds)
+        'CONN_HEALTH_CHECKS': True,  # Check connection health before reuse
+        
+        # ADDED: Additional options for better connection management
+        'OPTIONS': {
+            'connect_timeout': 10,  # 10 second connection timeout
+            'options': '-c statement_timeout=30000',  # 30 second query timeout
+        },
     }
 }
 
@@ -108,9 +118,14 @@ DATABASES = {
 if os.getenv('DATABASE_URL'):
     DATABASES['default'] = dj_database_url.config(
         default=os.getenv('DATABASE_URL'),
-        conn_max_age=600,
+        conn_max_age=300,  # UPDATED: Increased from 600 to 300 for better turnover
         conn_health_checks=True,
     )
+    # ADDED: Ensure OPTIONS are preserved when using DATABASE_URL
+    DATABASES['default']['OPTIONS'] = {
+        'connect_timeout': 10,
+        'options': '-c statement_timeout=30000',
+    }
 
 # ==============================
 # PASSWORD VALIDATION
@@ -135,9 +150,11 @@ USE_TZ = True
 # ==============================
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+
+# Only add static dir if it exists
+STATICFILES_DIRS = []
+if (BASE_DIR / 'static').exists():
+    STATICFILES_DIRS.append(BASE_DIR / 'static')
 
 # WhiteNoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './ProjectsSection.css';
+import config from "../../api/config";
 
 const ProjectsSection = () => {
   const [projects, setProjects] = useState([]);
@@ -19,7 +20,7 @@ const ProjectsSection = () => {
 
   // Fetch projects from API
   useEffect(() => {
-    axios.get('/api/projects/')
+    axios.get(`${config.API_BASE_URL}/projects/`)
       .then(res => {
         const data = res.data.results || res.data || [];
         console.log('Fetched projects:', data);

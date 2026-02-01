@@ -5,6 +5,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { sampleSiteSettings, sampleContactInfo } from '../data/sampleData';
 import './About.css';
+import config from '../api/config';
 
 const About = () => {
   const [aboutData, setAboutData] = useState(null);
@@ -21,9 +22,10 @@ const About = () => {
   const fetchData = async () => {
     try {
       // TODO: Replace with actual API calls when Django backend is ready
-      // const aboutResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/about/`);
-      // const aboutData = await aboutResponse.json();
-      // setAboutData(aboutData);
+      const aboutResponse = await fetch(`${config.API_BASE_URL}/about/`);
+      aboutData = await aboutResponse.json();
+      setAboutData(aboutData);
+
 
       // For now, using sample data
       setSiteSettings(sampleSiteSettings);

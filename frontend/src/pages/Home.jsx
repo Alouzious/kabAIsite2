@@ -12,6 +12,7 @@ import Footer from '../components/layout/Footer';
 import PartnersSection from '../components/home/PartnersSection';
 
 import './Home.css';
+import config from '../api/config';
 
 const siteName = process.env.REACT_APP_SITE_NAME || 'KUAI Club';
 const siteDescription =
@@ -29,9 +30,10 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   const [leaders, setLeaders] = useState([]);
   const [gallery, setGallery] = useState([]);
-  const [research, setResearch] = useState([]);
-  const [resources, setResources] = useState([]);
-  const [community, setCommunity] = useState([]);
+  // COMMENTED OUT - Not needed right now
+  // const [research, setResearch] = useState([]);
+  // const [resources, setResources] = useState([]);
+  // const [community, setCommunity] = useState([]);
   const [projects, setProjects] = useState([]);
   const [contactInfo, setContactInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -40,47 +42,50 @@ const Home = () => {
     const fetchData = async () => {
       try {
         // Site settings
-        const siteSettingsRes = await axios.get('/api/core/site-settings/');
+        const siteSettingsRes = await axios.get(`${config.API_BASE_URL}/core/site-settings/`);
         setSiteSettings(Array.isArray(siteSettingsRes.data) ? siteSettingsRes.data[0] : siteSettingsRes.data || {});
 
         // Contact Info
-        const contactInfoRes = await axios.get('/api/core/contact-info/');
+        const contactInfoRes = await axios.get(`${config.API_BASE_URL}/core/contact-info/`);
         setContactInfo(Array.isArray(contactInfoRes.data) ? contactInfoRes.data[0] : contactInfoRes.data || {});
 
         // About pages (if you have such an endpoint)
-        const aboutPagesRes = await axios.get('/api/about/');
+        const aboutPagesRes = await axios.get(`${config.API_BASE_URL}/about/`);
         setAboutPages(aboutPagesRes.data.results || aboutPagesRes.data || []);
 
         // News
-        const newsRes = await axios.get('/api/news/articles/');
+        const newsRes = await axios.get(`${config.API_BASE_URL}/news/articles/`);
         setNews(newsRes.data.results || newsRes.data || []);
 
         // Events
-        const eventsRes = await axios.get('/api/events/');
+        const eventsRes = await axios.get(`${config.API_BASE_URL}/events/`);
         setEvents(eventsRes.data.results || eventsRes.data || []);
 
         // Team leaders
-        const leadersRes = await axios.get('/api/team/members/');
+        const leadersRes = await axios.get(`${config.API_BASE_URL}/team/members/`);
         setLeaders(leadersRes.data.results || leadersRes.data || []);
 
-        // Research
-        const researchRes = await axios.get('/api/research/');
-        setResearch(researchRes.data.results || researchRes.data || []);
+        // COMMENTED OUT - These endpoints don't exist yet
+        // Uncomment when you create these endpoints in Django backend
+        
+        // // Research
+        // const researchRes = await axios.get(`${config.API_BASE_URL}/research/`);
+        // setResearch(researchRes.data.results || researchRes.data || []);
 
-        // Resources
-        const resourcesRes = await axios.get('/api/resources/');
-        setResources(resourcesRes.data.results || resourcesRes.data || []);
+        // // Resources
+        // const resourcesRes = await axios.get(`${config.API_BASE_URL}/resources/`);
+        // setResources(resourcesRes.data.results || resourcesRes.data || []);
 
-        // Community
-        const communityRes = await axios.get('/api/community/');
-        setCommunity(communityRes.data.results || communityRes.data || []);
+        // // Community
+        // const communityRes = await axios.get(`${config.API_BASE_URL}/community/`);
+        // setCommunity(communityRes.data.results || communityRes.data || []);
 
         // Projects
-        const projectsRes = await axios.get('/api/projects/');
+        const projectsRes = await axios.get(`${config.API_BASE_URL}/projects/`);
         setProjects(projectsRes.data.results || projectsRes.data || []);
 
         // Gallery
-        const galleryRes = await axios.get('/api/gallery/images/');
+        const galleryRes = await axios.get(`${config.API_BASE_URL}/gallery/images/`);
         setGallery(galleryRes.data.results || galleryRes.data || []);
 
         setLoading(false);

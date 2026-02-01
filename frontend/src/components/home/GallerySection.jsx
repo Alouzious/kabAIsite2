@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './GallerySection.css';
+import config from "../../api/config";
 
 const GallerySection = () => {
   const [gallery, setGallery] = useState([]);
@@ -13,7 +14,7 @@ const GallerySection = () => {
     const fetchGallery = async () => {
       try {
         // Your correct images endpoint for DRF router is usually /api/gallery/images/
-        const response = await fetch('/api/gallery/images/');
+        const response = await fetch(`${config.API_BASE_URL}/gallery/images/`);
         const data = await response.json();
         // support paginated (results) or flat
         setGallery(data.results || data || []);

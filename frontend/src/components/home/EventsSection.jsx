@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './EventsSection.css';
+import config from "../../api/config";
 
 const EventsSection = ({ backgroundImage = '' }) => {
   const [pastEvents, setPastEvents] = useState({
@@ -22,15 +23,20 @@ const EventsSection = ({ backgroundImage = '' }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('/api/events/');
+        const response = await fetch(`${config.API_BASE_URL}/events/`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        const events = data.results || [];
+        const events = data.results || data || [];
+        
+        // Ensure events is an array before filtering
+        const eventsArray = Array.isArray(events) ? events : [];
+        
         // Split into past & upcoming using API fields
-        const upcoming = events.filter(ev => ev.is_upcoming);
-        const past = events.filter(ev => ev.is_past);
+        const upcoming = eventsArray.filter(ev => ev.is_upcoming);
+        const past = eventsArray.filter(ev => ev.is_past);
+        
         setUpcomingEvents({
           events: upcoming,
           page: 1,

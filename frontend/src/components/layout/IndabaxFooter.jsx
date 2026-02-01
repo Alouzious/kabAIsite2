@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './IndabaxFooter.css';
+import config from "../../api/config";
 
 const IndabaxFooter = () => {
   console.log('IndabaxFooter loaded');
@@ -8,7 +9,7 @@ const IndabaxFooter = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/api/indabax/settings/current/')
+    axios.get(`${config.API_BASE_URL}/indabax/settings/current/`)
       .then(res => {
         setSettings(res.data);
         setLoading(false);

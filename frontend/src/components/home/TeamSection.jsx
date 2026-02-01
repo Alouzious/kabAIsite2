@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './TeamSection.css';
+import config from "../../api/config";
 
 const TeamSection = () => {
   const [currentLeaders, setCurrentLeaders] = useState([]);
@@ -12,8 +13,8 @@ const TeamSection = () => {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      fetch('/api/team/members/current/').then(res => res.json()),
-      fetch('/api/team/members/archived/').then(res => res.json())
+      fetch(`${config.API_BASE_URL}/team/members/current/`).then(res => res.json()),
+      fetch(`${config.API_BASE_URL}/team/members/archived/`).then(res => res.json())
     ])
       .then(([current, archived]) => {
         setCurrentLeaders(current || []);

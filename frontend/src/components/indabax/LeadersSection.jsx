@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Linkedin, Twitter, Github, Mail, ChevronDown, ChevronUp } from 'lucide-react';
+import config from "../../api/config";
 
 const LeadersSection = () => {
   const [leaders, setLeaders] = useState([]);
@@ -9,23 +10,26 @@ const LeadersSection = () => {
   const [showArchived, setShowArchived] = useState(false);
 
   useEffect(() => {
-    axios.get('/api/indabax/leaders/')
+    axios.get(`${config.API_BASE_URL}/indabax/leaders/`)
       .then(res => {
         // DRF may paginate, so check: .results or flat
         const data = res.data.results || res.data || [];
-        setLeaders(data);
+        // Ensure data is an array before setting
+        setLeaders(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(err => {
         console.error('Error loading leaders:', err);
         setError('Failed to load leaders.');
+        setLeaders([]);
         setLoading(false);
       });
   }, []);
 
   // Now using start_year/end_year, is_current + is_archived properties
-  const currentLeaders = leaders.filter(l => l.is_current);
-  const archivedLeaders = leaders.filter(l => l.is_archived);
+  // Ensure leaders is array before filtering
+  const currentLeaders = Array.isArray(leaders) ? leaders.filter(l => l.is_current) : [];
+  const archivedLeaders = Array.isArray(leaders) ? leaders.filter(l => l.is_archived) : [];
 
   // Group archived by (end_year, then start_year, fallback to label)
   const archivedByEndYear = {};

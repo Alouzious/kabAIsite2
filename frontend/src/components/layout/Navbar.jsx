@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
+import config from "../../api/config";
 
 const Navbar = () => {
   const location = useLocation();
@@ -23,7 +24,7 @@ const Navbar = () => {
 
   // Fetch all data on mount (like other sections)
   useEffect(() => {
-    fetch('/api/core/site-settings/')
+    fetch(`${config.API_BASE_URL}/core/site-settings/`)
       .then(res => res.json())
       .then(data => {
         console.log('Site settings response:', data); // Debug log
@@ -50,27 +51,27 @@ const Navbar = () => {
         setSiteSettings({});
       });
 
-    fetch('/api/about/')
+    fetch(`${config.API_BASE_URL}/about/`)
       .then(res => res.json())
       .then(data => setAboutPages(data.results || data || []));
-    fetch('/api/news/articles/')
+    fetch(`${config.API_BASE_URL}/news/articles/`)
       .then(res => res.json())
-      .then(data => setNews(data.results || []));
-    fetch('/api/events/')
+      .then(data => setNews(data.results || data || []));
+    fetch(`${config.API_BASE_URL}/events/`)
       .then(res => res.json())
-      .then(data => setEvents(data.results || []));
-    fetch('/api/research/')
+      .then(data => setEvents(data.results || data || []));
+    fetch(`${config.API_BASE_URL}/research/`)
       .then(res => res.json())
-      .then(data => setResearch(data.results || []));
-    fetch('/api/resources/')
+      .then(data => setResearch(data.results || data || []));
+    fetch(`${config.API_BASE_URL}/resources/`)
       .then(res => res.json())
-      .then(data => setResources(data.results || []));
-    fetch('/api/community/')
+      .then(data => setResources(data.results || data || []));
+    fetch(`${config.API_BASE_URL}/community/`)
       .then(res => res.json())
-      .then(data => setCommunity(data.results || []));
-    fetch('/api/projects/')
+      .then(data => setCommunity(data.results || data || []));
+    fetch(`${config.API_BASE_URL}/projects/`)
       .then(res => res.json())
-      .then(data => setProjects(data.results || []));
+      .then(data => setProjects(data.results || data || []));
   }, []);
 
   // Scroll effect
@@ -97,6 +98,14 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path;
   const newsSummary = (item) => item.excerpt ? item.excerpt.substring(0, 60) : '';
   const newsImage = (item) => item.image_thumbnail_url || item.image || '';
+
+  // Safe filter for aboutPages - ensure it's an array
+  const leftAboutPages = Array.isArray(aboutPages) ? aboutPages.filter(page => page.column_position === 'left') : [];
+  const rightAboutPages = Array.isArray(aboutPages) ? aboutPages.filter(page => page.column_position === 'right') : [];
+  
+  // Safe filter for resources - ensure it's an array
+  const learningResources = Array.isArray(resources) ? resources.filter(r => r.resource_type === 'learning') : [];
+  const toolResources = Array.isArray(resources) ? resources.filter(r => r.resource_type === 'tool') : [];
 
   return (
     <>
@@ -214,7 +223,7 @@ const Navbar = () => {
                         <div className="col-md-6">
                           <h6 className="dropdown-header">WHO WE ARE</h6>
                           <ul className="list-unstyled">
-                            {aboutPages.filter(page => page.column_position === 'left').map(page => (
+                            {leftAboutPages.map(page => (
                               <li key={page.id}>
                                 <Link to={`/about#${page.title.toLowerCase().replace(/\s+/g, '-')}`}>
                                   {page.title}
@@ -226,7 +235,7 @@ const Navbar = () => {
                         <div className="col-md-6">
                           <h6 className="dropdown-header">WHY WE EXIST</h6>
                           <ul className="list-unstyled">
-                            {aboutPages.filter(page => page.column_position === 'right').map(page => (
+                            {rightAboutPages.map(page => (
                               <li key={page.id}>
                                 <Link to={`/about#${page.title.toLowerCase().replace(/\s+/g, '-')}`}>
                                   {page.title}
@@ -407,7 +416,7 @@ const Navbar = () => {
                       <div className="col-md-6">
                         <h6 className="dropdown-header">LEARNING RESOURCES</h6>
                         <ul className="list-unstyled">
-                          {resources.filter(r => r.resource_type === 'learning').map(resource => (
+                          {learningResources.map(resource => (
                             <li key={resource.id}>
                               <Link to={`/resource/${resource.id}`}>{resource.title}</Link>
                             </li>
@@ -417,7 +426,7 @@ const Navbar = () => {
                       <div className="col-md-6">
                         <h6 className="dropdown-header">TOOLS & DOWNLOADS</h6>
                         <ul className="list-unstyled">
-                          {resources.filter(r => r.resource_type === 'tool').map(resource => (
+                          {toolResources.map(resource => (
                             <li key={resource.id}>
                               <Link to={`/resource/${resource.id}`}>{resource.title}</Link>
                             </li>

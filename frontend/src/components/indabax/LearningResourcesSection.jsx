@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import config from "../../api/config";
 
 const typeLabels = {
   video: 'YouTube Video',
@@ -15,7 +16,7 @@ const LearningResourcesSection = () => {
   const [error, setError] = useState(null);
   
   useEffect(() => {
-    axios.get('/api/indabax/resources/')
+    axios.get(`${config.API_BASE_URL}/indabax/resources/`)
       .then(res => {
         console.log('API Response:', res.data);
         const data = res.data.results || res.data || [];

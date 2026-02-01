@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Footer.css';
+import config from "../../api/config";
 
 const Footer = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -9,7 +10,7 @@ const Footer = () => {
   // Fetch site settings and quick links directly in Footer
   useEffect(() => {
     // Fetch site settings
-    fetch('/api/core/site-settings/')
+    fetch(`${config.API_BASE_URL}/core/site-settings/`)
       .then(res => res.json())
       .then(data => {
         console.log('Footer - Site settings response:', data);
@@ -30,17 +31,21 @@ const Footer = () => {
       });
 
     // Fetch quick links separately
-    fetch('/api/core/quick-links/')
+    fetch(`${config.API_BASE_URL}/core/quick-links/`)
       .then(res => res.json())
       .then(data => {
         console.log('Footer - Quick links response:', data);
         const links = data.results || data || [];
-        const activeLinks = links
-          .filter(link => link.is_active)
-          .sort((a, b) => (a.order || 0) - (b.order || 0));
+        // Ensure links is an array before filtering
+        const activeLinks = Array.isArray(links) 
+          ? links.filter(link => link.is_active).sort((a, b) => (a.order || 0) - (b.order || 0))
+          : [];
         setQuickLinks(activeLinks);
       })
-      .catch(error => console.error('Footer - Error fetching quick links:', error));
+      .catch(error => {
+        console.error('Footer - Error fetching quick links:', error);
+        setQuickLinks([]);
+      });
   }, []);
 
   useEffect(() => {
@@ -186,7 +191,7 @@ const Footer = () => {
         </a>     
         <p className="copyright">© 2025 {siteSettings.site_name || 'KUAI Club'}. All rights reserved.</p>     
         <p className="designer-credit">
-          Designed with <span className="heart">❤️</span> by <strong>Alouzious</strong>
+          Designed with <span className="heart">❤️</span> by <strong>Technical Lead</strong>
         </p>   
       </div> 
     </footer>

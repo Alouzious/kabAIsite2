@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './HeroSection.css';
+import config from "../../api/config";
 
 const HeroSection = () => {
   const [heroSlides, setHeroSlides] = useState([]);
@@ -15,15 +16,18 @@ const HeroSection = () => {
     const fetchData = async () => {
       try {
         // Fetch hero slides
-        const heroRes = await axios.get('/api/indabax/hero/');
+        const heroRes = await axios.get(`${config.API_BASE_URL}/indabax/hero/`);
         const heroData = heroRes.data.results || heroRes.data || [];
-        setHeroSlides(heroData.filter(h => h.is_active || true));
+        // Ensure heroData is array before filtering
+        const slides = Array.isArray(heroData) ? heroData.filter(h => h.is_active || true) : [];
+        setHeroSlides(slides);
 
         // Fetch settings for logo
-        const settingsRes = await axios.get('/api/indabax/settings/current/');
+        const settingsRes = await axios.get(`${config.API_BASE_URL}/indabax/settings/current/`);
         setSettings(settingsRes.data);
       } catch (err) {
         console.error('Error loading data:', err);
+        setHeroSlides([]);
       } finally {
         setLoading(false);
       }

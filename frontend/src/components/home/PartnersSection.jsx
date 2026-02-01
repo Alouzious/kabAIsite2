@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './PartnersSection.css';
+import config from "../../api/config";
 
 const PartnersSection = () => {
   const [partners, setPartners] = useState([]);
@@ -10,16 +11,19 @@ const PartnersSection = () => {
   const cardsRef = useRef([]);
 
   useEffect(() => {
-    axios.get('/api/partners/')
+    axios.get(`${config.API_BASE_URL}/partners/`)
       .then(res => {
         const data = res.data.results || res.data || [];
-        const activePartners = data.filter(partner => partner.is_active);
+        // Ensure data is an array before filtering
+        const dataArray = Array.isArray(data) ? data : [];
+        const activePartners = dataArray.filter(partner => partner.is_active);
         setPartners(activePartners);
         setLoading(false);
       })
       .catch(err => {
         console.error('ERROR loading partners:', err);
         setError('Failed to load partners.');
+        setPartners([]);
         setLoading(false);
       });
   }, []);

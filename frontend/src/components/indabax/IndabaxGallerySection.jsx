@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './IndabaxGallery.css';
+import config from "../../api/config";
 
 const IndabaxGallerySection = () => {
   const [images, setImages] = useState([]);
@@ -9,7 +10,7 @@ const IndabaxGallerySection = () => {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    axios.get('/api/indabax/gallery/')
+    axios.get(`${config.API_BASE_URL}/indabax/gallery/`)
       .then(res => {
         setImages(res.data.results); // FIX: Access results array
         setLoading(false);

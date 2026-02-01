@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './HeroSlider.css';
+import config from "../../api/config";
 
 const HeroSlider = () => {
   const [heroSlides, setHeroSlides] = useState([]);
@@ -12,16 +13,16 @@ const HeroSlider = () => {
 
   // Fetch hero slides from API
   useEffect(() => {
-    axios.get('/api/core/hero-slides/')
+    axios.get(`${config.API_BASE_URL}/core/hero-slides/`)
       .then(res => {
         // Handle paginated response
         const data = res.data.results || res.data || [];
-        console.log('✅ Fetched hero slides:', data);
+        console.log(' Fetched hero slides:', data);
         setHeroSlides(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(err => {
-        console.error('❌ Error loading hero slides:', err);
+        console.error(' Error loading hero slides:', err);
         setError('Failed to load hero slides.');
         setLoading(false);
       });

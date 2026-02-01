@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './NewsSection.css';
+import config from "../../api/config";
 
 const NewsSection = ({ initialNews = [] }) => {
   const [news, setNews] = useState(initialNews);
@@ -19,7 +20,7 @@ const NewsSection = ({ initialNews = [] }) => {
 
   const fetchNews = async () => {
     try {
-      const response = await fetch(`/api/news/articles/`);
+      const response = await fetch(`${config.API_BASE_URL}/news/articles/`);
       const data = await response.json();
       setNews(data.results || []);
     } catch (error) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './IndabaxAbout.css';
+import config from "../../api/config";
 
 const IndabaxAboutSection = () => {
   const [settings, setSettings] = useState(null);
@@ -8,7 +9,7 @@ const IndabaxAboutSection = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/indabax/settings/current/')
+    axios.get(`${config.API_BASE_URL}/indabax/settings/current/`)
       .then(res => {
         setSettings(res.data);
         setLoading(false);
