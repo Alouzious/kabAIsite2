@@ -31,7 +31,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    
+    # Cloudinary - MUST be before staticfiles
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
 
     # Third-party apps
     'rest_framework',
@@ -102,11 +106,11 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', ''),
         
-        # ADDED: Connection pooling settings for Supabase
+        # Connection pooling settings for Supabase
         'CONN_MAX_AGE': 300,  # Reuse connections for 5 minutes (300 seconds)
         'CONN_HEALTH_CHECKS': True,  # Check connection health before reuse
         
-        # ADDED: Additional options for better connection management
+        # Additional options for better connection management
         'OPTIONS': {
             'connect_timeout': 10,  # 10 second connection timeout
             'options': '-c statement_timeout=30000',  # 30 second query timeout
@@ -118,10 +122,10 @@ DATABASES = {
 if os.getenv('DATABASE_URL'):
     DATABASES['default'] = dj_database_url.config(
         default=os.getenv('DATABASE_URL'),
-        conn_max_age=300,  # UPDATED: Increased from 600 to 300 for better turnover
+        conn_max_age=300,
         conn_health_checks=True,
     )
-    # ADDED: Ensure OPTIONS are preserved when using DATABASE_URL
+    # Ensure OPTIONS are preserved when using DATABASE_URL
     DATABASES['default']['OPTIONS'] = {
         'connect_timeout': 10,
         'options': '-c statement_timeout=30000',
@@ -146,7 +150,7 @@ USE_I18N = True
 USE_TZ = True
 
 # ==============================
-# STATIC & MEDIA FILES
+# STATIC FILES
 # ==============================
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -159,8 +163,33 @@ if (BASE_DIR / 'static').exists():
 # WhiteNoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# ==============================
+# CLOUDINARY CONFIGURATION (for media files)
+# ==============================
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'dulw8etrt'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY', '447311778721483'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET')
+}
+
+# Configure Cloudinary
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=CLOUDINARY_STORAGE['API_SECRET'],
+    secure=True
+)
+
+# Use Cloudinary for media file storage
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Media URL (Cloudinary will handle the actual URLs)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media'  # Only used for local development if needed
 
 # ==============================
 # DEFAULT PRIMARY KEY
@@ -204,7 +233,6 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-
 
 
 
