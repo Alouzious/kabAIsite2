@@ -8,13 +8,10 @@ router.register(r'events', views.IndabaxEventViewSet, basename='indabax-event')
 router.register(r'speakers', views.IndabaxSpeakerViewSet, basename='indabax-speaker')
 router.register(r'sessions', views.IndabaxSessionViewSet, basename='indabax-session')
 router.register(r'gallery', views.IndabaxGalleryViewSet, basename='indabax-gallery')
-router.register(r'leaders', views.LeaderViewSet, basename='indabax-leader')  # Leader API endpoint!
+router.register(r'leaders', views.LeaderViewSet, basename='indabax-leader')
 
 urlpatterns = [
     path('resources/', views.LearningResourceListView.as_view(), name='indabax-resources-api'),
-    path('', views.indabax_main, name='indabax-main'),
-    # REMOVED this line to prevent conflict with API endpoint:
-    # path('leaders/', views.indabax_leaders, name='indabax-leaders'),
     path('hero/', views.HeroSectionListView.as_view(), name='indabax-hero-api'),
-    path('', include(router.urls)),  # Enables /api/indabax/leaders/ etc.
+    path('', include(router.urls)),
 ]
