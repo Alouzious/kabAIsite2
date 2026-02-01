@@ -1,10 +1,63 @@
-# Add after your imports
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 import dj_database_url
 
-# Update MIDDLEWARE - add WhiteNoise for static files
+# ==============================
+# LOAD ENV VARIABLES
+# ==============================
+load_dotenv()  # Loads .env from BASE_DIR
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ==============================
+# SECURITY
+# ==============================
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-change-this-before-production"
+)
+
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+
+# ==============================
+# APPLICATIONS
+# ==============================
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    # Third-party apps
+    'rest_framework',
+    'corsheaders',
+    'imagekit',
+    'django_filters',
+
+    # Local apps
+    'core',
+    'about',
+    'news',
+    'events',
+    'projects',
+    'team',
+    'gallery',
+    'partners',
+    'contact',
+    'indabax',
+]
+
+# ==============================
+# MIDDLEWARE
+# ==============================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ADD THIS LINE
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For serving static files
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -14,7 +67,32 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Update DATABASE section - replace your current DATABASES with this:
+# ==============================
+# URLS & TEMPLATES
+# ==============================
+ROOT_URLCONF = 'kuai_project.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'kuai_project.wsgi.application'
+
+# ==============================
+# DATABASE
+# ==============================
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -34,7 +112,27 @@ if os.getenv('DATABASE_URL'):
         conn_health_checks=True,
     )
 
-# Update STATIC FILES section - replace your current one:
+# ==============================
+# PASSWORD VALIDATION
+# ==============================
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
+
+# ==============================
+# INTERNATIONALIZATION
+# ==============================
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Africa/Kampala'
+USE_I18N = True
+USE_TZ = True
+
+# ==============================
+# STATIC & MEDIA FILES
+# ==============================
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
@@ -44,13 +142,38 @@ STATICFILES_DIRS = [
 # WhiteNoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Update CORS to use environment variable
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ==============================
+# DEFAULT PRIMARY KEY
+# ==============================
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ==============================
+# CORS SETTINGS
+# ==============================
 CORS_ALLOWED_ORIGINS = os.getenv(
     'CORS_ALLOWED_ORIGINS',
     'http://localhost:3000,http://127.0.0.1:3000'
 ).split(',')
 
-# Add security settings for production
+CORS_ALLOW_CREDENTIALS = True
+
+# ==============================
+# REST FRAMEWORK
+# ==============================
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
+
+# ==============================
+# SECURITY SETTINGS FOR PRODUCTION
+# ==============================
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -58,7 +181,6 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-
 
 
 
